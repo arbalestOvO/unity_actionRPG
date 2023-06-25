@@ -1,4 +1,6 @@
 using KevinCastejon.HierarchicalFiniteStateMachine;
+using UnityEngine;
+
 public class AirStateMachine : AbstractHierarchicalFiniteStateMachine
 {
     public enum States
@@ -19,6 +21,15 @@ public class AirStateMachine : AbstractHierarchicalFiniteStateMachine
     public override void OnStateMachineExit()
     {
     }
+    
+    protected override bool OnAnyStateUpdate()
+    {
+        if (PlayerInfo.Instance.animator.GetFloat("VerticleRigidforce") <= 0.001f)
+        {
+            TransitionToState(EXIT);   
+        }
+        return base.OnAnyStateUpdate();
+    }
     public class JumpState : AbstractState
     {
         public override void OnEnter()
@@ -26,6 +37,11 @@ public class AirStateMachine : AbstractHierarchicalFiniteStateMachine
         }
         public override void OnUpdate()
         {
+            PlayerInfo.Instance.UpdateAnimatorParameters();
+            if (PlayerInfo.Instance.animator.GetFloat("VerticleSpeed") <= 0.001f)
+            {
+                TransitionToState(States.FALL);
+            }
         }
         public override void OnFixedUpdate()
         {
@@ -36,11 +52,16 @@ public class AirStateMachine : AbstractHierarchicalFiniteStateMachine
     }
     public class FallState : AbstractState
     {
+        private float FallingTime;
         public override void OnEnter()
         {
+            FallingTime = 0f;
         }
         public override void OnUpdate()
         {
+            PlayerInfo.Instance.UpdateAnimatorParameters();
+            FallingTime += Time.deltaTime;
+            PlayerInfo.Instance.animator.SetFloat("FallingTime", FallingTime);
         }
         public override void OnFixedUpdate()
         {

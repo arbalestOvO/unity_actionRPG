@@ -4,7 +4,7 @@ using UnityEngine;
 using KevinCastejon.HierarchicalFiniteStateMachine;
 public class PlayerStateMachineeComponent : MonoBehaviour
 {
-    private PlayerStateMachinee _stateMachine;
+    public PlayerStateMachinee _stateMachine;
     private void Awake()
     {
         _stateMachine = AbstractHierarchicalFiniteStateMachine.CreateRootStateMachine<PlayerStateMachinee>("PlayerStateMachinee");

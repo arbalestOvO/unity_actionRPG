@@ -216,7 +216,8 @@ namespace KevinCastejon.HierarchicalFiniteStateMachine
         {
             if (OnAnyStateUpdate())
             {
-                _states[_currentState].OnUpdate();
+                if(_currentState != -1)
+                    _states[_currentState].OnUpdate();
             }
         }
         public sealed override void OnFixedUpdate()

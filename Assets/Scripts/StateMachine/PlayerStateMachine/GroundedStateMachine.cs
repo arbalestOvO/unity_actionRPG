@@ -1,4 +1,7 @@
 using KevinCastejon.HierarchicalFiniteStateMachine;
+using Unity.VisualScripting;
+using UnityEngine;
+
 public class GroundedStateMachine : AbstractHierarchicalFiniteStateMachine
 {
     public enum States
@@ -6,6 +9,7 @@ public class GroundedStateMachine : AbstractHierarchicalFiniteStateMachine
         IDLE,
         MOVE
     }
+
     public GroundedStateMachine()
     {
         Init(States.IDLE,
@@ -19,6 +23,16 @@ public class GroundedStateMachine : AbstractHierarchicalFiniteStateMachine
     public override void OnStateMachineExit()
     {
     }
+
+    protected override bool OnAnyStateUpdate()
+    {
+        if (PlayerInfo.Instance.animator.GetFloat("VerticleSpeed") > 0.001f)
+        {
+            TransitionToState(EXIT);   
+        }
+        return base.OnAnyStateUpdate();
+    }
+
     public class IdleState : AbstractState
     {
         public override void OnEnter()
@@ -26,7 +40,11 @@ public class GroundedStateMachine : AbstractHierarchicalFiniteStateMachine
         }
         public override void OnUpdate()
         {
-            PlayerInfo.Instance.animator.SetFloat("", PlayerInfo.Instance.PlayerSpeed);
+            PlayerInfo.Instance.UpdateAnimatorParameters();
+            if (PlayerInfo.Instance.PlayerSpeed > 0.001f)
+            {
+                TransitionToState(States.MOVE);
+            }
         }
         public override void OnFixedUpdate()
         {
@@ -42,6 +60,11 @@ public class GroundedStateMachine : AbstractHierarchicalFiniteStateMachine
         }
         public override void OnUpdate()
         {
+            PlayerInfo.Instance.UpdateAnimatorParameters();
+            if (PlayerInfo.Instance.PlayerSpeed <= 0.001f)
+            {
+                TransitionToState(States.IDLE);
+            }
         }
         public override void OnFixedUpdate()
         {

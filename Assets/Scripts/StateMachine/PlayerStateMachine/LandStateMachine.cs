@@ -19,13 +19,23 @@ public class LandStateMachine : AbstractHierarchicalFiniteStateMachine
     public override void OnStateMachineExit()
     {
     }
+    protected override bool OnAnyStateUpdate()
+    {
+        if (PlayerInfo.Instance.animator.GetBool("isLandEnd"))
+        {
+            TransitionToState(EXIT);   
+        }
+        return base.OnAnyStateUpdate();
+    }
     public class IdleState : AbstractState
     {
         public override void OnEnter()
         {
+            PlayerInfo.Instance.animator.SetBool("isLandEnd", true);
         }
         public override void OnUpdate()
         {
+            PlayerInfo.Instance.UpdateAnimatorParameters();
         }
         public override void OnFixedUpdate()
         {
@@ -41,6 +51,12 @@ public class LandStateMachine : AbstractHierarchicalFiniteStateMachine
         }
         public override void OnUpdate()
         {
+            PlayerInfo.Instance.UpdateAnimatorParameters();
+            var stateInfo = PlayerInfo.Instance.animator.GetCurrentAnimatorStateInfo(0);
+            if (stateInfo.normalizedTime >= 0.98f)
+            {
+                PlayerInfo.Instance.animator.SetBool("isLandEnd", true);
+            }
         }
         public override void OnFixedUpdate()
         {
