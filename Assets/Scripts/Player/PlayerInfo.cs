@@ -22,7 +22,7 @@ public class PlayerInfo : Singleton<PlayerInfo>
         animator.SetFloat("MoveX", InputManager.Instance.moveVector.x);
         animator.SetFloat("MoveY", InputManager.Instance.moveVector.y);
         animator.SetFloat("Speed", InputManager.Instance.moveVector.magnitude);
-        animator.SetFloat("VerticleSpeed", MathF.Abs(PlayerRigidbody.velocity.y));
+        animator.SetFloat("VerticleSpeed", PlayerRigidbody.velocity.y);
         animator.SetFloat("VerticleRigidforce", MathF.Abs(PlayerRigidbody.velocity.y));
     }
 }
