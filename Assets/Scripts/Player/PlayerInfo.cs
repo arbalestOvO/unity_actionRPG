@@ -8,13 +8,13 @@ public class PlayerInfo : Singleton<PlayerInfo>
     public float JumpSpeed;
     public Animator animator;
     public Rigidbody PlayerRigidbody;
-    public PlayerStateMachineeComponent playerStateMachine;
-    public float PlayerSpeed => InputManager.Instance.moveVector.magnitude; 
+    public float PlayerSpeed => InputManager.Instance.moveVector.magnitude;
+    public bool isGrounded => (Mathf.Abs(PlayerInfo.Instance.PlayerRigidbody.velocity.y) < 0.001f);
     private void Awake()
     {
         animator = GetComponent<Animator>();
+        animator.SetInteger("UseSkill", -1);
         PlayerRigidbody = GetComponent<Rigidbody>();
-        playerStateMachine = GetComponent<PlayerStateMachineeComponent>();
     }
 
     public void UpdateAnimatorParameters()
